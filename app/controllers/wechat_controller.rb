@@ -10,8 +10,8 @@ class WechatController < ApplicationController
         message = "11222"
        	render xml:  teplate_xml(message，info)
        end
-  	elsif request.request_method == "GET" && tmp_encrypted_str == signature
-  		render text: tmp_encrypted_str == signature ? wechat_params["echostr"] :  false
+  	elsif request.request_method == "GET" && verify_wechat_auth
+  		render text:  wechat_params["echostr"]
   	end
   end
 
@@ -43,7 +43,7 @@ class WechatController < ApplicationController
             <Content>#{message}</Content>
             <FuncFlag>0</FuncFlag>
           </xml>
-       Text
+Text
     template_xml
   end
 
