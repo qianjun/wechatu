@@ -5,7 +5,8 @@ layout false
   	if request.request_method == "POST" && verify_wechat_auth 
        info = Hash.from_xml(request.body.read)["xml"]
        if  info[:MsgType] == "event" && info[:Event] == "subscribe" 
-      message = "欢迎,最新活动&lt;a href='#{ENV["TESTURL"]}'&gt; 去看看,&lt;/a&gt;,详情猛戳查看"
+      # message = "欢迎,最新活动&lt;a href='#{ENV["TESTURL"]}'&gt; 去看看,&lt;/a&gt;,详情猛戳查看"
+      message = "11222"
        	render :xml => teplate_xml(message，info)
        end
   	elsif request.request_method == "GET" && tmp_encrypted_str == signature
