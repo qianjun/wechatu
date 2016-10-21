@@ -3,8 +3,10 @@ layout false
  
   def connect_weichat
     body = Hash.from_xml(request.body.read)["xml"]
-    if request.request_method == "POST" && verify_wechat_auth(ENV["AUTHTOKEN"], body["Encrypt"])
+    if  verify_wechat_auth(ENV["AUTHTOKEN"], body["Encrypt"])
       render text: 'success'
+    else
+    	render text: 'fail'
     end
   end
 
