@@ -1,5 +1,6 @@
 class WechatController < ApplicationController
-layout false
+	protect_from_forgery with: :null_session
+  layout false
  
   def connection
   	if request.request_method == "POST" && verify_wechat_auth 
