@@ -2,8 +2,7 @@ class WechatController < ApplicationController
 layout false
  
   def connection
-    body = Hash.from_xml(request.body.read)["xml"]
-    if  verify_wechat_auth(ENV["AUTHTOKEN"], body["Encrypt"])
+    if  verify_wechat_auth
       render text: 'success'
     else
     	render text: 'fail'
@@ -19,10 +18,10 @@ layout false
     params.permit(:timestamp, :nonce, :msg_signature)
   end
 
-  def verify_wechat_auth(token, encrypt)
-    return unless token
-    arr = [ token, wechat_message_params[:timestamp],
-            wechat_message_params[:nonce], encrypt ].sort
+  def verify_wechat_auth
+    return unless ENV["AUTHTOKEN"]
+    arr = [ ENV["AUTHTOKEN"], wechat_message_params[:timestamp],
+            wechat_message_params[:nonce] ].sort
     Digest::SHA1.hexdigest(arr.join) == wechat_message_params["msg_signature"]
   end
 end
