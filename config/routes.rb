@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   resources :wechat do 
   	 collection do 
   	 	get 'connection'
-  	 	
+  	 	post 'connection'
   	 end  	
   end
   root to: "wechat#index"
