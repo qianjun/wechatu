@@ -5,7 +5,7 @@
 
 unless Rails.env.development?
  
-redis = Redis.new(:host => "127.0.0.1", :port => "6379", :db => 15)
+redis = Redis.new(:url => "#{ENV['REDISURL']}")
 
  # 每次重启时，会把当前的命令空间所有的access_token 清除掉。
 # exist_keys = redis.keys("#{namespace}:*")
