@@ -8,7 +8,7 @@ class WechatController < ApplicationController
        if  info[:MsgType] == "event" && info[:Event] == "subscribe" 
       # message = "欢迎,最新活动&lt;a href='#{ENV["TESTURL"]}'&gt; 去看看,&lt;/a&gt;,详情猛戳查看"
         message = "11222"
-       	render xml:  teplate_xml(message，info)
+       	WECHAT_CLIENT.send_text_custom(to_user, message)
        end
   	elsif request.request_method == "GET" && verify_wechat_auth
   		render text:  wechat_params["echostr"]
