@@ -15,13 +15,13 @@ layout false
   private
 
   def wechat_message_params
-    params.permit(:timestamp, :nonce, :msg_signature)
+    params.permit(:timestamp, :nonce, :echostr,:signature)
   end
 
   def verify_wechat_auth
     return unless ENV["AUTHTOKEN"]
     arr = [ ENV["AUTHTOKEN"], wechat_message_params[:timestamp],
             wechat_message_params[:nonce] ].sort
-    Digest::SHA1.hexdigest(arr.join) == wechat_message_params["msg_signature"]
+    Digest::SHA1.hexdigest(arr.join) == wechat_message_params["signature"]
   end
 end
