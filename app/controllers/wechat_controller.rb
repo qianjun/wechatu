@@ -1,7 +1,7 @@
 class WechatController < ApplicationController
 layout false
  
-  def connect_weichat
+  def connection
     body = Hash.from_xml(request.body.read)["xml"]
     if  verify_wechat_auth(ENV["AUTHTOKEN"], body["Encrypt"])
       render text: 'success'
