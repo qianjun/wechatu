@@ -8,7 +8,7 @@ class WechatController < ApplicationController
       if info["MsgType"] == "event" && info["Event"] == "subscribe" 
          message = "欢迎关注x！<a href='#{url}'>你想要显示的文字</a>"
          Rails.logger.debug message
-	       WECHAT_CLIENT.send_text_custom(params[:openid], text)  #发送文本消息
+	       WECHAT_CLIENT.send_text_custom(params[:openid], message)  #发送文本消息
 	       Rails.logger.debug WECHAT_CLIENT.user(params[:openid]).result #get user info
 	       response = WECHAT_CLIENT.create_menu(menu)  #create menu
 	     
