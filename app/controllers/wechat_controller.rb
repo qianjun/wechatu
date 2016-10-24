@@ -5,15 +5,16 @@ class WechatController < ApplicationController
   def connection
   	if request.request_method == "POST" && verify_wechat_auth 
        info = Hash.from_xml(request.body.read)["xml"]
-       # if  info[:MsgType] == "event" && info[:Event] == "subscribe" 
-      # message = "欢迎,最新活动&lt;a href='#{ENV["TESTURL"]}'&gt; 去看看,&lt;/a&gt;,详情猛戳查看"
-       result = WECHAT_CLIENT.send_text_custom(params[:openid], "hello")
-       Rails.logger.debug result.full_error_message
-       Rails.logger.debug WECHAT_CLIENT.user(params[:openid]).result
-       response = WECHAT_CLIENT.create_menu(menu)
-       Rails.logger.debug response.result
-       render plain: "success"
-       # end
+       if  info[:MsgType] == "event" && info[:Event] == "subscribe" 
+         message = "欢迎,最新活动&lt;a href='#{ENV["TESTURL"]}'&gt; 去看看,&lt;/a&gt;,详情猛戳查看"
+	       result = WECHAT_CLIENT.send_text_custom(params[:openid], message)
+	       Rails.logger.debug WECHAT_CLIENT.user(params[:openid]).result #get user info
+	       response = WECHAT_CLIENT.create_menu(menu)  #create menu
+	       Rails.logger.debug response.result
+	       render plain: "success"
+	     elsif info[:MsgType] == "text"
+	     	WECHAT_CLIENT.send_text_custom(params[:openid], "谢谢回复")
+       end
   	elsif request.request_method == "GET" && verify_wechat_auth
   		render plain:  wechat_params["echostr"]
   	end
