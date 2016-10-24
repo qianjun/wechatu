@@ -1,10 +1,7 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  resources :wechat do 
-  	 collection do 
-  	 	get 'connection'
-  	 	post 'connection'
-  	 end  	
-  end
   root to: "wechat#index"
+  match 'connection', to: 'wechat#connection',via: [:get,:post]
+  resources :wechat 
+ 
 end
