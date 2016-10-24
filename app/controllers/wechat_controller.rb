@@ -5,12 +5,12 @@ class WechatController < ApplicationController
   def connection
   	if request.request_method == "POST" && verify_wechat_auth 
        info = Hash.from_xml(request.body.read)["xml"]
-       if  info[:MsgType] == "event" && info[:Event] == "subscribe" 
+       # if  info[:MsgType] == "event" && info[:Event] == "subscribe" 
       # message = "欢迎,最新活动&lt;a href='#{ENV["TESTURL"]}'&gt; 去看看,&lt;/a&gt;,详情猛戳查看"
         message = "11222"
        WECHAT_CLIENT.send_text_custom(info[:FromUserName], message)
        render plain: "success"
-       end
+       # end
   	elsif request.request_method == "GET" && verify_wechat_auth
   		render plain:  wechat_params["echostr"]
   	end
