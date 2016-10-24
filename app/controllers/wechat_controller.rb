@@ -60,7 +60,7 @@ class WechatController < ApplicationController
      scope: "snsapi_userinfo",
      status: "123"
   	}
-   URI.encode(ENV["OPENURL"]+parms.to_query+"#wechat_redirect")
+   URI.parse(ENV["OPENURL"]+parms.to_query+"#wechat_redirect")
   end
 
 end
