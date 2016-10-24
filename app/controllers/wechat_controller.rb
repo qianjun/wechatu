@@ -10,8 +10,8 @@ class WechatController < ApplicationController
        result = WECHAT_CLIENT.send_text_custom(info[:FromUserName], "hello")
        Rails.logger.debug result.full_error_message
        Rails.logger.debug WECHAT_CLIENT.user(params[:openid]).result
-       response = WECHAT_CLIENT.create_menu(menu).result
-      
+       response = WECHAT_CLIENT.create_menu(menu)
+       Rails.logger.debug response.result
        render plain: "success"
        # end
   	elsif request.request_method == "GET" && verify_wechat_auth
@@ -36,7 +36,7 @@ class WechatController < ApplicationController
   end
 
   def menu
-    {
+    return {
      "button":[
      {	
           "type":"click",
