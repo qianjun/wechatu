@@ -7,7 +7,7 @@ class WechatController < ApplicationController
        info = Hash.from_xml(request.body.read)["xml"]
        # if  info[:MsgType] == "event" && info[:Event] == "subscribe" 
       # message = "欢迎,最新活动&lt;a href='#{ENV["TESTURL"]}'&gt; 去看看,&lt;/a&gt;,详情猛戳查看"
-       result = WECHAT_CLIENT.send_text_custom(info[:FromUserName], "hello")
+       result = WECHAT_CLIENT.send_text_custom(params[:openid], "hello")
        Rails.logger.debug result.full_error_message
        Rails.logger.debug WECHAT_CLIENT.user(params[:openid]).result
        response = WECHAT_CLIENT.create_menu(menu)
