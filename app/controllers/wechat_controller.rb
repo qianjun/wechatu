@@ -6,11 +6,9 @@ class WechatController < ApplicationController
   	if request.request_method == "POST" && verify_wechat_auth 
       info = Hash.from_xml(request.body.read)["xml"]
       if info["MsgType"] == "event" && info["Event"] == "subscribe" 
-      	text= '<a href="http://www.baidu.com">你想要显示的文字</a>'
-         message = "欢迎关注x！请关注最新活动&lt;a&gt; hello &lt;/a&gt;,详情猛戳查看"
+         message = "欢迎关注x！<a href='#{url}'>你想要显示的文字</a>"
          Rails.logger.debug message
 	       WECHAT_CLIENT.send_text_custom(params[:openid], text)  #发送文本消息
-	       WECHAT_CLIENT.send_text_custom(params[:openid], "关注最新活动&lt;a&gt; hello &lt;/a&gt;,详情猛戳查看")
 	       Rails.logger.debug WECHAT_CLIENT.user(params[:openid]).result #get user info
 	       response = WECHAT_CLIENT.create_menu(menu)  #create menu
 	     
