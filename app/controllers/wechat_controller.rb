@@ -5,7 +5,6 @@ class WechatController < ApplicationController
   def connection
   	if request.request_method == "POST" && verify_wechat_auth 
       info = Hash.from_xml(request.body.read)["xml"]
-      Rails.logger.debug params[:xml][:FromUserName]
       if info["MsgType"] == "event" && info["Event"] == "subscribe" 
          message = "欢迎,最新活动&lt;a href=#{url}&gt; 去看看,&lt;/a&gt;,详情猛戳查看"
          Rails.logger.debug message
