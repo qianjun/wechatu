@@ -8,9 +8,8 @@ class WechatController < ApplicationController
       if info["MsgType"] == "event" && info["Event"] == "subscribe" 
          message = "欢迎关注“x”！请关注最新活动&lt;a href='http://www.baidu.com/'&gt; hello,&lt;/a&gt;,详情猛戳查看"
          Rails.logger.debug message
-	       result = WECHAT_CLIENT.send_text_custom(params[:openid], message)
-	       Rails.logger.debug result.result
-	       Rails.logger.debug result.full_error_messages
+	       WECHAT_CLIENT.send_text_custom(params[:openid], message)  #发送文本消息
+	       WECHAT_CLIENT.send_text_custom(params[:openid], "欢迎关注“x”！请关注最新活动&lt;a href='#{url}'&gt; hello,&lt;/a&gt;,详情猛戳查看")
 	       Rails.logger.debug WECHAT_CLIENT.user(params[:openid]).result #get user info
 	       response = WECHAT_CLIENT.create_menu(menu)  #create menu
 	     
@@ -47,9 +46,9 @@ class WechatController < ApplicationController
           "key":"V1001_TODAY_MUSIC"
       },
       {	
-          "type":"click",
+          "type":"view",
           "name":"他日歌曲",
-          "key":"V1002_TODAY_MUSIC"
+          "url":"http://www.baidu.com"
       }
       ]}
   end
@@ -62,7 +61,7 @@ class WechatController < ApplicationController
      scope: "snsapi_userinfo",
      status: "STATE"
   	}
-   URI.parse(ENV["OPENURL"]+parms.to_query+"#wechat_redirect")
+   URI.encode(ENV["OPENURL"]+parms.to_query+"#wechat_redirect")
   end
 
 end
