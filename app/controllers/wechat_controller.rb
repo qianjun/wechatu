@@ -57,8 +57,8 @@ class WechatController < ApplicationController
   	 appid: ENV["WECHATID"],
      redirect_uri: ENV["REDIRECTURI"],
      response_type: "code",
-     scope: "snsapi_userinfo",
-     status: "STATE"
+     scope: "snsapi_base",
+     status: "123"
   	}
    URI.encode(ENV["OPENURL"]+parms.to_query+"#wechat_redirect")
   end
