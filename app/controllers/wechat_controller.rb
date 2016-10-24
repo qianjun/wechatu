@@ -8,7 +8,7 @@ class WechatController < ApplicationController
        # if  info[:MsgType] == "event" && info[:Event] == "subscribe" 
       # message = "欢迎,最新活动&lt;a href='#{ENV["TESTURL"]}'&gt; 去看看,&lt;/a&gt;,详情猛戳查看"
        result = WECHAT_CLIENT.send_text_custom(info[:FromUserName], "hello")
-       Rails.logger.debug result
+       Rails.logger.debug result.result + "" + result.code
        render plain: "success"
        # end
   	elsif request.request_method == "GET" && verify_wechat_auth
