@@ -21,7 +21,9 @@ class WechatController < ApplicationController
   	end
   end
 
-  def share
+  def mp_ticket
+    p rand_map(43)
+    render nothing: true
   end
 
   private
@@ -61,6 +63,13 @@ class WechatController < ApplicationController
      status: "123"
   	}
    URI.parse(ENV["OPENURL"]+parms.to_query+"#wechat_redirect")
+  end
+
+  def rand_map(number)
+    code_array = []
+    chars = ('A'..'Z').to_a + ('a'..'z').to_a + (0..9).to_a
+    number.times {code_array << chars[rand(chars.length)]}
+    return code_array.join("")
   end
 
 end
