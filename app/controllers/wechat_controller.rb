@@ -22,8 +22,10 @@ class WechatController < ApplicationController
   end
 
   def mp_ticket
+    info = Hash.from_xml(request.body.read)["xml"]
+    Rails.logger.debug info
     p rand_map(43)
-    render nothing: true
+    render plain: "success"
   end
 
   private
