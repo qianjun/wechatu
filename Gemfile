@@ -51,4 +51,3 @@ gem 'figaro'
 gem 'weixin_authorize'
 gem 'redis'
 gem "redis-namespace"
-require 'faraday'
