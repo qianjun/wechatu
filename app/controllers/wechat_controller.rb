@@ -24,11 +24,10 @@ class WechatController < ApplicationController
 
   def mp_ticket
     info = Hash.from_xml(request.body.read)["xml"]
-    if open_authorize(info["Encrypt"])
-        decrypt(info["Encrypt"])
-    end
     Rails.logger.debug info
-    p rand_map(43)
+    if open_authorize(info["Encrypt"])
+      decrypt(info["Encrypt"])
+    end
     render plain: "success"
   end
 
@@ -80,14 +79,9 @@ class WechatController < ApplicationController
 
   def open_authorize(encrypt)
     arr = [ ENV["token"], wechat_params[:timestamp],wechat_params[:nonce],encrypt].sort
+    Rails.logger.debug arr
+    Rails.logger.debug Digest::SHA1.hexdigest(arr.join)
     Digest::SHA1.hexdigest(arr.join) == wechat_params["signature"]
   end
-
-   def aes_dicrypt(key, dicrypted_string)
-    aes = OpenSSL::Cipher::Cipher.new("AES-128-ECB")
-    aes.decrypt
-    aes.key = key
-    aes.update([dicrypted_string].pack('H*')) << aes.final
-end
 
 end
