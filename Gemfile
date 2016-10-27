@@ -51,3 +51,5 @@ gem 'figaro'
 gem 'weixin_authorize'
 gem 'redis'
 gem "redis-namespace"
+gem "aes"
+gem 'multi_xml'

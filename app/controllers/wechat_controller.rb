@@ -1,5 +1,6 @@
 class WechatController < ApplicationController
 	protect_from_forgery with: :null_session
+  include Prpcrypt
   layout false
  
   def connection
@@ -23,6 +24,9 @@ class WechatController < ApplicationController
 
   def mp_ticket
     info = Hash.from_xml(request.body.read)["xml"]
+    if open_authorize(info["Encrypt"])
+        decrypt(info["Encrypt"])
+    end
     Rails.logger.debug info
     p rand_map(43)
     render plain: "success"
@@ -73,5 +77,17 @@ class WechatController < ApplicationController
     number.times {code_array << chars[rand(chars.length)]}
     return code_array.join("")
   end
+
+  def open_authorize(encrypt)
+    arr = [ ENV["token"], wechat_params[:timestamp],wechat_params[:nonce],encrypt].sort
+    Digest::SHA1.hexdigest(arr.join) == wechat_params["signature"]
+  end
+
+   def aes_dicrypt(key, dicrypted_string)
+    aes = OpenSSL::Cipher::Cipher.new("AES-128-ECB")
+    aes.decrypt
+    aes.key = key
+    aes.update([dicrypted_string].pack('H*')) << aes.final
+end
 
 end
