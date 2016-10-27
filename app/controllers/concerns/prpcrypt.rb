@@ -18,6 +18,8 @@ module Prpcrypt
       text = MultiXml.parse(decrypt_text[0])
       os = OpenStruct.new(text["xml"])
       redis.hset(ENV["key_name"],ENV['field_name'], os.ComponentVerifyTicket)
+      Rails.logger.debug os.ComponentVerifyTicket
+      Rails.logger.debug redis.hget(ENV["key_name"],ENV['field_name'])
     end
 
     def encode(str)
@@ -31,7 +33,6 @@ module Prpcrypt
     end
 
     def encrypt_text_decrypt(aes_key, text)
-      p aes_key
       status = 200
       text   = Base64.decode64(text)
       text   = handle_cipher(:decrypt, aes_key, text)

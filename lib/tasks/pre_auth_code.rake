@@ -25,24 +25,22 @@ namespace :apply do
 	task :pre_auth_code => :environment do
 		require 'rubygems'
 		require "redis"
-		client = WeixinAuthorize::Client.new(ENV["WECHATID"], ENV["WECHATSECRET"])
+		component_url = "https://api.weixin.qq.com/cgi-bin/component/api_component_token"
 		redis = Redis.new(:url => "#{ENV['REDISURL']}")
     component_body = {
 		  component_appid: ENV["open_app_id"],
 		  component_appsecret: ENV["open_app_secrect"], 
-		  component_verify_ticket: "ticket@@@tDIE_Xd664HIcQ7b0aYr13p1LO2uUpTBeS_3JGvyhcQP8zUyntBKGTmOJhoyA4iDtibPN7Cb3pHMKqtbnAIlLw"
-      # redis.hget(ENV["key_name"],ENV['field_name'])
+		  component_verify_ticket: redis.hget(ENV["key_name"],ENV['field_name'])
     }
-
-		# component_token = JSON RestClient.post(ENV["component_url"], component_body.to_json).body["component_access_token"]
-     component_token = "-zulm5LGd3PE3yvQQ9u_vdI525A2FnCncVJRamIZRGWjmoqzh9rpw00xOK7110nlmPGx3NWlkQQ6gDJduRhz8HbsAVtMBH7aIjwdcU7EMEoom2LCWBgHJK6hEj92YWzCKURaAIACMJ"
+		 component_token = JSON RestClient.post(component_url, component_body.to_json).body["component_access_token"]
      redis.hset(ENV["key_name"],ENV['component_token'],component_token)
      pre_url = "https://api.weixin.qq.com/cgi-bin/component/api_create_preauthcode?component_access_token=#{component_token}"
      pre_body = {component_appid: ENV["open_app_id"]}
-     # pre_auth_code = JSON RestClient.post(pre_url, pre_body.to_json).body["pre_auth_code"]
+     pre_auth_code = JSON RestClient.post(pre_url, pre_body.to_json).body["pre_auth_code"]
      auth_url = "https://mp.weixin.qq.com/cgi-bin/componentloginpage"
      # p auth_url + "?component_appid=#{ENV["open_app_id"]}&pre_auth_code=#{pre_auth_code}&redirect_uri=#{ENV['REDIRECTURI'].gsub('://','%3a%2f%2f')}"
 	end
+
 
   # task 传递参数 ？
   desc "need authorization_code to get refresh token,can pass"
@@ -60,13 +58,12 @@ namespace :apply do
    redis.hset(ENV["key_name"],ENV['refresh_name'],refresh_token) 
 	end
 
+
   desc "refresh token"
 	task :refresh_access_token => :environment do
 	 redis = Redis.new(:url => "#{ENV['REDISURL']}")
-	 # component_token = redis.hget(ENV["key_name"],ENV['component_token'])
-	 # refresh_token = redis.hget(ENV["key_name"],ENV['refresh_name'])
-	 refresh_token = "refreshtoken@@@hoeZK7D0-XtUr6hyTQWnsI6puMtBMQWAlSvSYc5B6lc"
-	 component_token = "-zulm5LGd3PE3yvQQ9u_vdI525A2FnCncVJRamIZRGWjmoqzh9rpw00xOK7110nlmPGx3NWlkQQ6gDJduRhz8HbsAVtMBH7aIjwdcU7EMEoom2LCWBgHJK6hEj92YWzCKURaAIACMJ"
+	 component_token = redis.hget(ENV["key_name"],ENV['component_token'])
+	 refresh_token = redis.hget(ENV["key_name"],ENV['refresh_name'])
 	 authorizer_refresh_url = "https://api.weixin.qq.com/cgi-bin/component/api_authorizer_token?component_access_token=#{component_token}"
 	 authorizer_body = {
     component_appid: ENV["open_app_id"], #授权方appid
@@ -74,5 +71,17 @@ namespace :apply do
 		authorizer_refresh_token: refresh_token,
    }
    p JSON RestClient.post(authorizer_refresh_url, authorizer_body.to_json).body
+	end
+	
+
+	task :test_redis => :environment do
+   redis = Redis.new(:url => "#{ENV['REDISURL']}")
+   # redis.hset(ENV["key_name"],"test",123)
+   # authorization_code = "queryauthcode@@@VkOuguLVVpG1vUesw7QuHFbXnvJ0NnUpmLSHhQZ4WzxHTF2qVvXw1UZHVCRsyHWef-ACuvax7jvBAVlwl6Q3dA"
+   # refresh_token = "refreshtoken@@@hoeZK7D0-XtUr6hyTQWnsI6puMtBMQWAlSvSYc5B6lc"
+   # redis.hset(ENV["key_name"],ENV['refresh_name'],refresh_token) 
+   # component_token = "-zulm5LGd3PE3yvQQ9u_vdI525A2FnCncVJRamIZRGWjmoqzh9rpw00xOK7110nlmPGx3NWlkQQ6gDJduRhz8HbsAVtMBH7aIjwdcU7EMEoom2LCWBgHJK6hEj92YWzCKURaAIACMJ"
+   # redis.hset(ENV["key_name"],ENV['component_token'],component_token)
+   p redis.hgetall(ENV["key_name"])
 	end
 end
