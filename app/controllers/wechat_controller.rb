@@ -1,7 +1,7 @@
 class WechatController < ApplicationController
 	protect_from_forgery with: :null_session
   include Prpcrypt
-  layout false
+  layout false, except: [:index]
  
   def connection
   	if request.request_method == "POST" && verify_wechat_auth 
@@ -22,6 +22,10 @@ class WechatController < ApplicationController
   	end
   end
 
+  def index
+   $client ||= WeixinAuthorize::Client.new(ENV["WECHATID"], ENV["WECHATSECRET"])
+  end
+
   def mp_ticket
     info = Hash.from_xml(request.body.read)["xml"]
     Rails.logger.debug info
@@ -29,6 +33,10 @@ class WechatController < ApplicationController
       decrypt(info["Encrypt"])
     end
     render plain: "success"
+  end
+
+  def author_code
+
   end
 
   private
@@ -71,17 +79,15 @@ class WechatController < ApplicationController
   end
 
   def rand_map(number)
-    code_array = []
-    chars = ('A'..'Z').to_a + ('a'..'z').to_a + (0..9).to_a
-    number.times {code_array << chars[rand(chars.length)]}
-    return code_array.join("")
+    chars = [*'A'..'Z'] + [*'a'..'z'] + [*0..9]
+    return (1..number).map {chars[rand(chars.length)]}.join
   end
 
   def open_authorize(encrypt)
     arr = [ ENV["token"], wechat_params[:timestamp],wechat_params[:nonce],encrypt].sort
     Rails.logger.debug arr
     Rails.logger.debug Digest::SHA1.hexdigest(arr.join)
-    Digest::SHA1.hexdigest(arr.join) == wechat_params["signature"]
+    Digest::SHA1.hexdigest(arr.join) == wechat_params["msg_signature"]
   end
 
 end
