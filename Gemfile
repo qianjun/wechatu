@@ -53,4 +53,3 @@ gem 'redis'
 gem "redis-namespace"
 gem "aes"
 gem 'multi_xml'
-gem 'ruby-lua'
