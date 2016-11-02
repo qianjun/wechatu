@@ -23,7 +23,7 @@ class WechatController < ApplicationController
   end
 
   def index
-   $client ||= WeixinAuthorize::Client.new(ENV["WECHATID"], ENV["WECHATSECRET"])
+   $client = WeixinAuthorize::Client.new(ENV["WECHATID"], ENV["WECHATSECRET"])
   end
 
   def mp_ticket
