@@ -8,10 +8,17 @@ class WechatController < ApplicationController
       info = Hash.from_xml(request.body.read)["xml"]
       Rails.logger.debug info
       if info["MsgType"] == "event" && info["Event"] == "subscribe" 
+        if info["EventKey"] == ""
          message = "欢迎关注x！<a href='#{url}'>你想要显示的文字</a>"
 	       WECHAT_CLIENT.send_text_custom(params[:openid], message)  #发送文本消息
 	       Rails.logger.debug WECHAT_CLIENT.user(params[:openid]).result #get user info
 	       response = WECHAT_CLIENT.create_menu(menu)  #create menu
+       else
+         qrcode = info["EventKey"].split("_")
+        if qrcode[0] == "qrscene"  #场景二维码判断
+          WECHAT_CLIENT.send_text_custom(params[:openid], qrcode[1])
+        end
+       end
 	     
 	    elsif info["MsgType"] == "text"
 	    	  WECHAT_CLIENT.send_text_custom(params[:openid], "谢谢回复")
