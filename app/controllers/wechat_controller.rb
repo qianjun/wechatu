@@ -6,7 +6,7 @@ class WechatController < ApplicationController
   def connection
   	if request.request_method == "POST" && verify_wechat_auth 
       info = Hash.from_xml(request.body.read)["xml"]
-      ails.logger.debug info
+      Rails.logger.debug info
       if info["MsgType"] == "event" && info["Event"] == "subscribe" 
          message = "欢迎关注x！<a href='#{url}'>你想要显示的文字</a>"
 	       WECHAT_CLIENT.send_text_custom(params[:openid], message)  #发送文本消息
