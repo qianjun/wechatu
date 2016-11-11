@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   match 'connection', to: 'wechat#connection',via: [:get,:post]
   match 'mp_ticket', to: 'wechat#mp_ticket', via: [:get,:post]
   match 'author_code', to: 'wechat#author_code',via: [:get]
+  match 'load_auth', to: 'wechat#load_config',via: [:get]
+  match 'create_qrcode', to: 'assistants#create_qrcode', via: [:get]
   resources :wechat 
+  resources :assistants
  
 end

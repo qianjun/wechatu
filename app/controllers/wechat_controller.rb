@@ -1,14 +1,14 @@
 class WechatController < ApplicationController
 	protect_from_forgery with: :null_session
   include Prpcrypt
-  layout false, except: [:index]
+  layout false
  
   def connection
   	if request.request_method == "POST" && verify_wechat_auth 
       info = Hash.from_xml(request.body.read)["xml"]
+      ails.logger.debug info
       if info["MsgType"] == "event" && info["Event"] == "subscribe" 
          message = "欢迎关注x！<a href='#{url}'>你想要显示的文字</a>"
-         Rails.logger.debug message
 	       WECHAT_CLIENT.send_text_custom(params[:openid], message)  #发送文本消息
 	       Rails.logger.debug WECHAT_CLIENT.user(params[:openid]).result #get user info
 	       response = WECHAT_CLIENT.create_menu(menu)  #create menu
@@ -22,9 +22,6 @@ class WechatController < ApplicationController
   	end
   end
 
-  def index
-   $client = WeixinAuthorize::Client.new(ENV["WECHATID"], ENV["WECHATSECRET"])
-  end
 
   def mp_ticket
     info = Hash.from_xml(request.body.read)["xml"]
@@ -38,6 +35,12 @@ class WechatController < ApplicationController
   def author_code
 
   end
+
+  def load_config
+     client = WeixinAuthorize::Client.new(ENV["WECHATID"], ENV["WECHATSECRET"])
+     render json: client.get_jssign_package(params[:url])
+  end
+
 
   private
 

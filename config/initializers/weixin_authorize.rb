@@ -3,7 +3,7 @@
 
 
 
-unless Rails.env.development?
+# unless Rails.env.development?
  
 redis = Redis.new(:url => "#{ENV['REDISURL']}")
 
@@ -18,4 +18,4 @@ exist_keys.each{|key|redis.del(key)}
 
   WECHAT_CLIENT ||= WeixinAuthorize::Client.new(ENV["WECHATID"], ENV["WECHATSECRET"])
 
-end
+# end
