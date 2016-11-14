@@ -7,6 +7,7 @@ class WechatController < ApplicationController
   	if request.request_method == "POST" && verify_wechat_auth 
       info = Hash.from_xml(request.body.read)["xml"]
       Rails.logger.debug info
+      #普通关注之后再次扫描的推送event是scan
       if info["MsgType"] == "event" && info["Event"] == "subscribe" 
         if info["EventKey"] == ""
          message = "欢迎关注x！<a href='#{url}'>你想要显示的文字</a>"
