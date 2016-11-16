@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   match 'author_code', to: 'wechat#author_code',via: [:get]
   match 'load_auth', to: 'wechat#load_config',via: [:get]
   match 'create_qrcode', to: 'assistants#create_qrcode', via: [:get]
+  match ':appid/callback', to: 'wechat#callback', via: [:post]
   resources :wechat 
   resources :assistants
  

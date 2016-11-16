@@ -44,6 +44,12 @@ class WechatController < ApplicationController
 
   end
 
+  def callback
+    info = Hash.from_xml(request.body.read)["xml"]
+    Rails.logger.debug info
+    render plain: "success"
+  end
+
   def load_config
      client = WeixinAuthorize::Client.new(ENV["WECHATID"], ENV["WECHATSECRET"])
      render json: client.get_jssign_package(params[:url])
