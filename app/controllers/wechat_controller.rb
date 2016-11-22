@@ -13,7 +13,6 @@ class WechatController < ApplicationController
          message = "欢迎关注x！<a href='#{url}'>你想要显示的文字</a>"
 	       WECHAT_CLIENT.send_text_custom(params[:openid], message)  #发送文本消息
 	       Rails.logger.debug WECHAT_CLIENT.user(params[:openid]).result #get user info
-	       response = WECHAT_CLIENT.create_menu(menu)  #create menu
        else
          qrcode = info["EventKey"].split("_")
         if qrcode[0] == "qrscene"  #场景二维码判断
@@ -30,6 +29,10 @@ class WechatController < ApplicationController
   	end
   end
 
+  def index
+   Rails.logger.debug request.parameters
+  end
+
 
   def mp_ticket
     info = Hash.from_xml(request.body.read)["xml"]
@@ -41,7 +44,7 @@ class WechatController < ApplicationController
   end
 
   def author_code
-
+    render json: {"success" =>request.parameters}
   end
 
   def callback
@@ -68,21 +71,6 @@ class WechatController < ApplicationController
     Digest::SHA1.hexdigest(arr.join) == wechat_params["signature"]
   end
 
-  def menu
-    return {
-     "button":[
-     {	
-          "type":"click",
-          "name":"今日歌曲",
-          "key":"V1001_TODAY_MUSIC"
-      },
-      {	
-          "type":"view",
-          "name":"他日歌曲",
-          "url":"http://www.baidu.com"
-      }
-      ]}
-  end
 
   def url
     parms = {
