@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     _result = sns_info.result
     Rails.logger.info("auth_code: #{_result["openid"]}")
     Rails.logger.info("_result: #{_result.inspect}")
-    session[:user_id] = _result["openid"]
+    session[:openid] = _result["openid"]
   end
  
 end
