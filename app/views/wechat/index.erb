@@ -8,10 +8,10 @@
      ga('create', 'UA-85090003-1', { 'userId': '<%= session[:openid]%>' });
      ga('require', 'displayfeatures');
      ga('send','pageview');
-
+alert("<%= session[:openid]%>")
 </script>
 </head>
-<body class='tt_<%= session[:openid]%>'>
+<body>
 tell the wechat
 <br/>
 <img src="http://img1.3lian.com/2015/w7/85/d/101.jpg" />
