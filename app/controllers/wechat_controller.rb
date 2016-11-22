@@ -8,7 +8,7 @@ class WechatController < ApplicationController
       info = Hash.from_xml(request.body.read)["xml"]
       Rails.logger.debug info
       session[:openid] = "#{params[:openid]}__#{info["FromUserName"]}"
-      cookie[:open] = "#{params[:openid]}__#{info["FromUserName"]}"
+      cookies[:open] = "#{params[:openid]}__#{info["FromUserName"]}"
       #普通关注之后再次扫描的推送event是scan
       if info["MsgType"] == "event" && info["Event"] == "subscribe" 
         if info["EventKey"] == ""
