@@ -31,6 +31,7 @@ class WechatController < ApplicationController
   end
 
   def index
+    $client = WECHAT_CLIENT
    Rails.logger.debug request.parameters
   end
 
