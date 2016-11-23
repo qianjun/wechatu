@@ -56,10 +56,14 @@
   wx.ready(function () {
     // 5.2 图片预览
     $('img').click(function () {
+    var urls = [];
+    $('img').each(function (i){
+      urls.push(this.src)
+    });
       var img_src = $(this).prop("src");
       wx.previewImage({
         current: img_src,
-        urls: [img_src]
+        urls: urls
       });
     });
 

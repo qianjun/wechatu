@@ -55,3 +55,6 @@ gem 'redis'
 gem "redis-namespace"
 gem "aes"
 gem 'multi_xml'
+
+#google analytics
+gem 'oauth2'

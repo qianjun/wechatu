@@ -1,4 +1,4 @@
-
+#rake调用方法
 # namespace :pick do  
 #   desc "Pick a random user as the winner"  
 #   task :winner => :environment do  
