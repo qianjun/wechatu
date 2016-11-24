@@ -6,9 +6,12 @@
      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-     ga('create', 'UA-87389420-1', { 'userId': "1111<%= session[:openid]%>" });
+     ga('create', 'UA-87389420-1', { 'userId': "<%= session[:openid]%>" });
      ga('require', 'displayfeatures');
      ga('send','pageview');
+     ga('set', 'location', 'http://foo.com/home?a=b');
+     ga('set', 'page', '/about.html');
+     ga('set', 'referrer', 'http://example.com');
 </script>
 </head>
 <body>
@@ -17,6 +20,21 @@ tell the wechat
 <img src="http://img1.3lian.com/2015/w7/85/d/101.jpg" />
 <br/>
 <img src="http://image.tianjimedia.com/uploadImages/2014/106/04/JC1H4PI563W3_1000x500.png" />
+<a src="https://sharewechat.herokuapp.com/pages/1.html" onclick="test_out()">呵呵</a>
 <%= render 'weixin_api'%>
+<script type="text/javascript">
+	function test_out(){
+		ga(function(tracker) {
+      alert(tracker.get('trackingId'));
+    });
+    var page = this.src;
+		ga('send', 'event', 'link', 'click', page, {
+     nonInteraction: true
+  });
+	ga(function(tracker) {
+  alert(tracker.get('clientId'));
+  });
+	}
+</script>
 </body>
 </html>
